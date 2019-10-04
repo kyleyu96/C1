@@ -39,13 +39,47 @@ public class CommentsCounter {
         return -1;
     }
 
-    public static void analyzeSingleDelimVariant(List<String> lines, String extension) {
+    public static void analyzeSingleDelimVariant(List<String> lines, String lang) {
         int commentLines = 0;
         int singleLineComments = 0;
         int blockCommentLines = 0;
         int blockComments = 0;
         int todos = 0;
 
+        String delim = commentDelim(lang);
+
+        int i = 0;
+        String line;
+        int curBlockLen = 0;
+        while (i < lines.size()) {
+            line = lines.get(i);
+            if (line.startsWith(delim)) {
+                commentLines++;
+                curBlockLen++;
+                if (line.contains("TODO")) todos++;
+            }
+            else {
+                if (curBlockLen > 0) {
+                    if (curBlockLen == 1) {
+                        singleLineComments++;
+                    }
+                    else {
+                        blockComments++;
+                        blockCommentLines += curBlockLen;
+                    }
+                    curBlockLen = 0;
+                }
+
+                int inline = inlineComment(line, delim);
+                if (inline > -1) {
+                    commentLines++;
+                    singleLineComments++;
+                    line = line.substring(inline);
+                    if (line.contains("TODO")) todos++;
+                }
+            }
+            i++;
+        }
 
         System.out.println("Total # of lines: " + lines.size());
         System.out.println("Total # of comment lines: " + commentLines);
