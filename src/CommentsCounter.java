@@ -80,6 +80,15 @@ public class CommentsCounter {
             }
             i++;
         }
+        if (curBlockLen > 0) {
+            if (curBlockLen == 1) {
+                singleLineComments++;
+            }
+            else {
+                blockComments++;
+                blockCommentLines += curBlockLen;
+            }
+        }
 
         System.out.println("Total # of lines: " + lines.size());
         System.out.println("Total # of comment lines: " + commentLines);
