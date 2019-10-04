@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 public class CommentsCounter {
 
+    // input: the programming language used in the file
+    // output: the character sequence marking the start of a single line comment
     public static String commentDelim(String lang) {
         switch (lang) {
             case "py":
@@ -15,6 +17,8 @@ public class CommentsCounter {
         }
     }
 
+    // input: the programming language used in the file
+    // output: delimiters for block comment
     public static String[] blockDelim(String lang) {
         switch (lang) {
             case "c":
@@ -28,7 +32,8 @@ public class CommentsCounter {
         }
     }
 
-    // detect if a line of code has inline comment
+    // if line contains an inline comment, returns its starting index
+    // else returns -1
     public static int inlineComment(String line, String delim) {
         int singleQuotation = 0;
         int doubleQuotation = 0;
@@ -42,6 +47,8 @@ public class CommentsCounter {
         return -1;
     }
 
+    // method called when the programming language used does not have different delimiters for
+    // single line comment and block comment (ex: python)
     public static void analyzeSingleDelimVariant(List<String> lines, String lang) {
         int commentLines = 0;
         int singleLineComments = 0;
@@ -101,6 +108,8 @@ public class CommentsCounter {
         System.out.println("Total # of TODO’s: " + todos);
     }
 
+    // method called when the programming language used has different delimiters for
+    // single line comment and block comment (ex: java, c++)
     public static void analyze(List<String> lines, String lang) {
         int commentLines = 0;
         int singleLineComments = 0;
@@ -164,6 +173,7 @@ public class CommentsCounter {
     }
 
     public static void main(String[] args) {
+        // get the file path from the user
         File inFile = null;
         if (args.length > 0) {
             inFile = new File(args[0]);
@@ -176,15 +186,17 @@ public class CommentsCounter {
             scan.close();
         }
 
+        // verify that the filename is valid
         String fname = inFile.getName();
-        System.out.println(fname);
         if (fname.startsWith(".") || fname.lastIndexOf('.') == -1) {
             System.out.println("Invalid file");
         }
 
+        // the file extension indicates the programming language used
         String extension = fname.substring(fname.lastIndexOf('.') + 1);
 
         try (BufferedReader br = new BufferedReader(new FileReader(inFile))) {
+            // read the file line by line
             String line;
             List<String> lines = new ArrayList<>();
             while ((line = br.readLine()) != null) {
@@ -192,6 +204,8 @@ public class CommentsCounter {
             }
             br.close();
 
+            // method used depends on whether the programming language used has different delimiters for
+            // single line comment and block comment
             if (blockDelim(extension) == null) {
                 analyzeSingleDelimVariant(lines, extension);
             } else {
