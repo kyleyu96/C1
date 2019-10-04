@@ -7,9 +7,8 @@ public class CommentsCounter {
 
     public static String commentDelim(String lang) {
         switch (lang) {
-            case "java":
-                return "//";
             case "py":
+            case "py3":
                 return "#";
             default:
                 return "//";
@@ -18,7 +17,11 @@ public class CommentsCounter {
 
     public static String[] blockDelim(String lang) {
         switch (lang) {
+            case "c":
+            case "cp":
+            case "cpp":
             case "java":
+            case "js":
                 return new String[]{"/*", "*", "*/"};
             default:
                 return null;
